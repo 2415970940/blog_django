@@ -14,13 +14,53 @@
         transform: translate(-50%,-50%);
     }
     </style>
+    <script src="http://cdn.hcharts.cn/highcharts/highcharts.js"></script>
 {% endblock %}
 
 {% block content %}
-    <div class="jumbotron" align="center">
-          <h1>Hello, world!</h1>
-          <p>欢迎你们的莅临我的博客</p>
-          <p><a class="btn btn-primary btn-lg" href="{% url 'blog_list' %}" role="button">进入</a></p>
-  </div>
+{#    <div class="jumbotron" align="center">#}
+{#          <h1>Hello, world!</h1>#}
+{#          <p>欢迎你们的莅临我的博客</p>#}
+{#          <p><a class="btn btn-primary btn-lg" href="{% url 'blog_list' %}" role="button">进入</a></p>#}
+{#  </div>#}
+    <!-- 图表容器 DOM -->
+    <div id="container" ></div>
+    <script>
+        // 图表配置
+        var options = {
+            chart: {
+                type: 'line'                          //指定图表的类型，默认是折线图（line）
+            },
+            title: {
+                text: "7天阅读量统计"             // 标题
+            },
+            xAxis: {
+                categories: {{ dates|safe }},   // x 轴分类
+                tickmarkPlacement:"on"
+            },
+            yAxis: {
+                title: {
+                    text: null                // y 轴标题
+                },
+                labels:{enabled:false},
+                gridLineDashStyle:'Dash',
+            },
+            series: [{                              // 数据列
+                name: '阅读量',                        // 数据列名
+                data: {{ readnums }}                     // 数据
+            }],
+            plotOptions: {
+                line: {
+                    dataLabels: {
+                        enabled: true
+                    }
+                }
+            },
+            legend:{enabled:false},
+            credits:{enabled:false},
+        };
+        // 图表初始化函数
+        var chart = Highcharts.chart('container', options);
+    </script>
 {% endblock %}
 

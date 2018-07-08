@@ -27,3 +27,8 @@ ul.blog-info-description li{
     margin-bottom: 10px;
 }
 
+div#container {
+    margin: 0 auto;
+    width: 80%;
+}
+

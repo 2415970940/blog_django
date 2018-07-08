@@ -23,7 +23,7 @@ urlpatterns = [
     path('admin/', admin.site.urls,name='admin'),
     path('blog/',include('blog.urls')),
     path('ckeditor',include('ckeditor_uploader.urls')),
-    path('', index,name='home'),
+    path('',index,name='home'),
 ]
 
 urlpatterns+=static(settings.MEDIA_URL,document_root=settings.MEDIA_ROOT)
