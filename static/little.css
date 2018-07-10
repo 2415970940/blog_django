@@ -14,11 +14,6 @@ div.info{
     text-align: center;
 }
 
-div.blog_text{
-    margin-left: 6%;
-    margin-right: 6%;
-    padding: 40px;
-}
 
 ul.blog-info-description li{
     display: inline-block;
@@ -29,6 +24,8 @@ ul.blog-info-description li{
 
 div#container {
     margin: 0 auto;
-    width: 80%;
+    height: 20em;
+    min-width: 20em;
+    max-width: 30em;
 }
 

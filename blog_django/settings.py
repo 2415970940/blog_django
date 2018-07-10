@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'ckeditor_uploader',
     'blog',
     'read_statistics',
+    'comment',
 ]
 
 MIDDLEWARE = [
@@ -139,3 +140,11 @@ MEDIA_URL='/media/'
 MEDIA_ROOT=os.path.join(BASE_DIR,"media")
 
 CKEDITOR_UPLOAD_PATH='upload/'
+
+# cache
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.db.DatabaseCache',
+        'LOCATION': 'my_cache_table',
+    }
+}

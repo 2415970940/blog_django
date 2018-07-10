@@ -1,4 +1,4 @@
-from django.shortcuts import render_to_response,get_object_or_404
+from django.shortcuts import render,get_object_or_404
 from django.core.paginator import Paginator
 from .models import Blog,BlogType
 from django.db.models import Count
@@ -47,7 +47,7 @@ def blog_comm_data(request,blog_list):
 def blog_list(request):
     blog_all = Blog.objects.all()
     context =blog_comm_data(request,blog_all)
-    return render_to_response("blog/blog_list.html",context)
+    return render(request,"blog/blog_list.html",context)
 
 def blog_detail(request,blog_pk):
     context = {}
@@ -56,9 +56,9 @@ def blog_detail(request,blog_pk):
     context['blog']=blog
     context['pre_blog']=Blog.objects.filter(create_time__gt=blog.create_time).last()
     context['next_blog']=Blog.objects.filter(create_time__lt=blog.create_time).first()
+    context['user'] = request.user
 
-
-    response = render_to_response("blog/blog_detail.html",context)
+    response = render(request,"blog/blog_detail.html",context)
     response.set_cookie(read_cookie_key,"true")
     return response
 
@@ -67,10 +67,10 @@ def type_blog(request,blog_type_pk):
     blog_all = Blog.objects.filter(blog_type=type_names)
     context=blog_comm_data(request,blog_all)
     context['blog_type']=type_names
-    return render_to_response("blog/blog_type.html",context)
+    return render(request,"blog/blog_type.html",context)
 
 def blog_date(request,year,month):
     blog_all = Blog.objects.filter(create_time__year=year,create_time__month=month)
     content = blog_comm_data(request,blog_all)
     content['date']="%s年%s月"%(year,month)
-    return render_to_response("blog/blog_date.html",content)
+    return render(request,"blog/blog_date.html",content)
