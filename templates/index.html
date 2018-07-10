@@ -25,6 +25,41 @@
 {#  </div>#}
     <!-- 图表容器 DOM -->
     <div id="container" ></div>
+    <!--今天热门博客-->
+    今天热门博客
+    <ul>
+    {% for hot in todayhot %}
+        <li><a href="{% url 'blog_detail' hot.content_object.pk  %}">{{ hot.content_object.title|truncatechars:20 }}</a>({{ hot.read_num }})</li>
+    {% empty %}
+        暂无
+    {% endfor %}
+    </ul>
+        昨天热门博客
+    <ul>
+    {% for hot in yesterdayhot %}
+        <li><a href="{% url 'blog_detail' hot.content_object.pk  %}">{{ hot.content_object.title|truncatechars:20 }}</a>({{ hot.read_num }})</li>
+    {% empty %}
+        暂无
+    {% endfor %}
+    </ul>
+    7天热门博客
+    <ul>
+    {% for sdhot in sevenhot %}
+        <li><a href="{% url 'blog_detail' sdhot.id  %}">
+            {{ sdhot.title|truncatechars:20 }}</a>({{ sdhot.readnum_sum }})</li>
+    {% empty %}
+        暂无
+    {% endfor %}
+    </ul>
+    30天热门博客
+    <ul>
+    {% for sdhot in thirtyhot %}
+        <li><a href="{% url 'blog_detail' sdhot.id  %}">
+            {{ sdhot.title|truncatechars:20 }}</a>({{ sdhot.readnum_sum }})</li>
+    {% empty %}
+        暂无
+    {% endfor %}
+    </ul>
     <script>
         // 图表配置
         var options = {
@@ -32,11 +67,12 @@
                 type: 'line'                          //指定图表的类型，默认是折线图（line）
             },
             title: {
-                text: "7天阅读量统计"             // 标题
+                text: null           // 标题
             },
             xAxis: {
                 categories: {{ dates|safe }},   // x 轴分类
-                tickmarkPlacement:"on"
+                tickmarkPlacement:"on",
+                title:{text:"前7天阅读量"},
             },
             yAxis: {
                 title: {

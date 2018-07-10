@@ -2,7 +2,7 @@ import datetime
 from .models import Readnum,ReadDetail
 from django.db.models import Sum
 from django.contrib.contenttypes.models import ContentType
-from django.db.models import F
+from blog.models import Blog
 from django.utils import timezone
 
 def read_statistics_once_read(request,obj):
@@ -31,3 +31,14 @@ def seven_read(contenttype):
         result = readdetail.aggregate(read_sum = Sum('read_num'))
         read_num.append(result['read_sum'] or 0)
     return read_num,dates
+
+def hot_blog_today(contenttype):
+    today = timezone.now().date()
+    readdetail = ReadDetail.objects.filter(content_type=contenttype,date=today).order_by("-read_num")
+    return readdetail[:7]
+
+def hot_blog_yesterday(contenttype):
+    today = timezone.now().date()
+    yesterday = today - datetime.timedelta(days=1)
+    readdetail = ReadDetail.objects.filter(content_type=contenttype,date=yesterday).order_by("-read_num")
+    return readdetail[:7]
