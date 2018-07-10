@@ -3,6 +3,8 @@ from django.core.paginator import Paginator
 from .models import Blog,BlogType
 from django.db.models import Count
 from read_statistics.utils import read_statistics_once_read
+from django.contrib.contenttypes.models import ContentType
+from comment.models import Comment
 
 
 blogs_per_pages=5
@@ -53,11 +55,13 @@ def blog_detail(request,blog_pk):
     context = {}
     blog = get_object_or_404(Blog,pk=blog_pk)
     read_cookie_key=read_statistics_once_read(request,blog)
+    blog_content_type = ContentType.objects.get_for_model(blog)
+    comments = Comment.objects.filter(content_type=blog_content_type,object_id=blog_pk)[:10]
+
     context['blog']=blog
     context['pre_blog']=Blog.objects.filter(create_time__gt=blog.create_time).last()
     context['next_blog']=Blog.objects.filter(create_time__lt=blog.create_time).first()
-    context['user'] = request.user
-
+    context['comments'] = comments
     response = render(request,"blog/blog_detail.html",context)
     response.set_cookie(read_cookie_key,"true")
     return response

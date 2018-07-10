@@ -7,6 +7,7 @@ from blog.models import Blog
 from django.db.models import Sum
 from django.core.cache import cache
 from django.contrib import auth
+from django.urls import reverse
 
 def getdayshot(somedays):
     today = timezone.now().date()
@@ -44,8 +45,10 @@ def login(request):
     username = request.POST.get('username','')
     password = request.POST.get('password','')
     user = auth.authenticate(request, username=username, password=password)
+    # 登录后还在本页面
+    refere=request.META.get('HTTP_REFERER',reverse('home'))
     if user is not None:
         auth.login(request, user)
-        return redirect('/')
+        return redirect(refere)
     else:
        return render(request,'error.html',{'message':'用户或密码不正确'})
