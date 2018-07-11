@@ -1,7 +1,7 @@
 from django.shortcuts import render,get_object_or_404
 from django.core.paginator import Paginator
 from .models import Blog,BlogType
-from django.db.models import Count
+from django.db.models import Sum,Count
 from read_statistics.utils import read_statistics_once_read
 from django.contrib.contenttypes.models import ContentType
 from comment.models import Comment
@@ -57,7 +57,9 @@ def blog_detail(request,blog_pk):
     read_cookie_key=read_statistics_once_read(request,blog)
     blog_content_type = ContentType.objects.get_for_model(blog)
     comments = Comment.objects.filter(content_type=blog_content_type,object_id=blog_pk)[:10]
-
+    # 每篇博客评论的数量
+    comment_num = Blog.objects.values('id','title').annotate(nums=Count('comment')).order_by('-nums')[:5]
+    context['comment_num'] = comment_num
     context['blog']=blog
     context['pre_blog']=Blog.objects.filter(create_time__gt=blog.create_time).last()
     context['next_blog']=Blog.objects.filter(create_time__lt=blog.create_time).first()

@@ -3,6 +3,7 @@ from django.contrib.auth.models import User
 from ckeditor_uploader.fields import RichTextUploadingField
 from django.contrib.contenttypes.fields import GenericRelation
 from read_statistics.models import ReadnumMethod,ReadDetail
+from comment.models import Comment
 
 # Create your models here.
 
@@ -19,6 +20,7 @@ class Blog(models.Model,ReadnumMethod):
     content =RichTextUploadingField()
     #contenttype反取
     readdetails = GenericRelation(ReadDetail)
+    comment = GenericRelation(Comment)
     create_time = models.DateTimeField(auto_now_add=True)
     last_update_time = models.DateTimeField(auto_now=True)
 

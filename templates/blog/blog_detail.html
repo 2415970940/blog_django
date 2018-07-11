@@ -63,6 +63,13 @@
                     {% endfor %}
 
                 </div>
+                <div>
+                    评论排行：
+                    {% for comment in comment_num %}
+                        {{ comment.title }}({{ comment.nums }})
+                    {% endfor %}
+
+                </div>
             </div>
         </div>
     </div>
