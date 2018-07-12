@@ -41,13 +41,9 @@
                             <input type="hidden" name="content_type" value="blog">
                             <input type="submit" class="btn btn-default" value="提交" style="float: right">
                         </form>
-                    {% else %}登录方可评论，请登录<br>
-                        <form action="{% url 'login' %}" method="post">
-                        {% csrf_token %}
-                        用户名:<input type="text" name="username">
-                        密码:<input type="password" name="password">
-                        <input type="submit" value="login">
-                        </form>
+                    {% else %}登录方可评论，请
+                        <a href="{% url 'login' %}?from={{ request.get_full_path }}" class="btn btn-primary">登录</a>
+                        或<a href="{% url 'register' %}?from={{ request.get_full_path }}" class="btn btn-primary">注册</a>
                     {% endif %}
                 </div>
                 <div class="comment-area">

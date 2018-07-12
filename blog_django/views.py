@@ -7,7 +7,10 @@ from blog.models import Blog
 from django.db.models import Sum
 from django.core.cache import cache
 from django.contrib import auth
+from django.contrib.auth.models import User
 from django.urls import reverse
+from .forms import LoginForm,RegForm
+
 
 def getdayshot(somedays):
     today = timezone.now().date()
@@ -42,13 +45,33 @@ def index(request):
     return render(request,'index.html',context)
 
 def login(request):
-    username = request.POST.get('username','')
-    password = request.POST.get('password','')
-    user = auth.authenticate(request, username=username, password=password)
-    # 登录后还在本页面
-    refere=request.META.get('HTTP_REFERER',reverse('home'))
-    if user is not None:
-        auth.login(request, user)
-        return redirect(refere)
+    if request.method == 'POST':
+        login_form = LoginForm(request.POST)
+        if login_form.is_valid():
+            user = login_form.clean()['user']
+            auth.login(request,user)
+            return redirect(request.GET.get('from'))
     else:
-       return render(request,'error.html',{'message':'用户或密码不正确'})
+        login_form = LoginForm()
+
+    context={}
+    context['login_form'] = login_form
+    return render(request,'login.html',context)
+
+def register(request):
+    if request.method == 'POST':
+        regform = RegForm(request.POST)
+        if regform.is_valid():
+            username = regform.cleaned_data['username']
+            password = regform.cleaned_data['password']
+            email = regform.cleaned_data['email']
+            user = User.objects.create_user(username,email,password)
+            user.save()
+            user = auth.authenticate(username=username,password=password)
+            auth.login(request,user)
+            return redirect(request.GET.get('from'),reverse('home'))
+    else:
+        regform = RegForm()
+    context={}
+    context['regform'] = regform
+    return render(request,'register.html',context)
