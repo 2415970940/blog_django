@@ -5,6 +5,7 @@ from django.db.models import Sum,Count
 from read_statistics.utils import read_statistics_once_read
 from django.contrib.contenttypes.models import ContentType
 from comment.models import Comment
+from comment.forms import CommentForm
 
 
 blogs_per_pages=5
@@ -60,6 +61,9 @@ def blog_detail(request,blog_pk):
     # 每篇博客评论的数量
     comment_num = Blog.objects.values('id','title').annotate(nums=Count('comment')).order_by('-nums')[:5]
     context['comment_num'] = comment_num
+    # 评论
+    context['comment_form']=CommentForm(initial={'content_type':blog_content_type.model,'object_id':blog_pk})
+
     context['blog']=blog
     context['pre_blog']=Blog.objects.filter(create_time__gt=blog.create_time).last()
     context['next_blog']=Blog.objects.filter(create_time__lt=blog.create_time).first()
